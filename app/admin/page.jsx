@@ -1,0 +1,10 @@
+import Link from "next/link";
+import {redirect} from "next/navigation";
+import {createClient} from "@/lib/supabase/server";
+import AdminLogout from "@/components/AdminLogout";
+export default async function AdminHome(){
+ const supabase=await createClient();const {data:{user}}=await supabase.auth.getUser();if(!user)redirect("/admin/login");
+ const {data:profile}=await supabase.from("profiles").select("role,active,full_name").eq("id",user.id).single();if(!profile||profile.role!=="admin"||!profile.active)redirect("/admin/login");
+ const [{count:orders},{count:products},{data:recent}]=await Promise.all([supabase.from("orders").select("*",{count:"exact",head:true}),supabase.from("products").select("*",{count:"exact",head:true}),supabase.from("orders").select("*").order("created_at",{ascending:false}).limit(8)]);
+ return <main className="wrap section"><div className="section-head"><div><div className="eyebrow">Chhaya Jewellers</div><h1 style={{font:"600 36px 'Playfair Display',serif"}}>Admin dashboard</h1><p className="muted">Welcome, {profile.full_name||user.email}</p></div><AdminLogout/></div><nav className="adminnav"><Link href="/admin/products">Products & stock</Link><Link href="/admin/orders">Orders</Link><Link href="/admin/reports">Sales reports</Link></nav><div className="grid"><div className="panel"><div className="muted">Total orders</div><h2>{orders||0}</h2></div><div className="panel"><div className="muted">Products</div><h2>{products||0}</h2></div><div className="panel"><div className="muted">Admin account</div><h2>Active</h2></div><div className="panel"><div className="muted">Team access</div><h2>Up to 4</h2></div></div><section className="section"><h2>Recent orders</h2><div style={{overflowX:"auto"}}><table className="table"><thead><tr><th>Order</th><th>Customer</th><th>Mobile</th><th>Status</th><th>Date</th></tr></thead><tbody>{(recent||[]).map(o=><tr key={o.id}><td>{o.order_number}</td><td>{o.customer_name}</td><td>{o.customer_mobile}</td><td><span className="pill">{o.status}</span></td><td>{new Date(o.created_at).toLocaleString("en-IN")}</td></tr>)}</tbody></table></div></section></main>
+}

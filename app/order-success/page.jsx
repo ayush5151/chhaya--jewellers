@@ -1,0 +1,3 @@
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+export default async function OrderSuccess({searchParams}){const p=await searchParams;return <><Header/><main className="wrap section"><div className="panel" style={{maxWidth:650,margin:"auto",textAlign:"center"}}><div className="eyebrow">Thank you for shopping with us</div><h1 style={{font:"600 38px 'Playfair Display',serif"}}>Order confirmed!</h1><p>Your order has been received successfully.</p><h2>{p?.order||"Order received"}</h2><p className="muted">Please keep your order number. Chhaya Jewellers will contact you to coordinate delivery or pickup.</p><a className="btn gold" href="/">Continue shopping</a></div></main><Footer/></>}

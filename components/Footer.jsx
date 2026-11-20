@@ -1,0 +1,1 @@
+export default function Footer(){return <footer className="footer"><div className="wrap"><div className="brand">CHHAYA <span>JEWELLERS</span></div><p>Timeless elegance, trusted craftsmanship.</p><small>Ranchi Road, Ramgarh, Jharkhand · Orders are confirmed instantly. Our team will contact you to coordinate delivery or pickup.</small></div></footer>}
